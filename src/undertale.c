@@ -9,6 +9,42 @@ static BitmapLayer *s_background_layer;
 
 static GBitmap *s_animation_bitmap;
 static BitmapLayer *s_animation_layer;
+static GBitmapSequence *s_sequence;
+
+
+// Animation
+static void timer_handler(void *context) {
+  uint32_t next_delay;
+
+  // Advance to the next APNG frame
+  if(gbitmap_sequence_update_bitmap_next_frame(s_sequence, s_animation_bitmap, &next_delay)) {
+    bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
+    layer_mark_dirty(bitmap_layer_get_layer(s_animation_layer));
+
+    // Timer for that delay
+    app_timer_register(next_delay, timer_handler, NULL);
+  } else {
+    // Start again
+    gbitmap_sequence_restart(s_sequence);
+  }
+}
+
+static void load_sequence() {
+  if(s_sequence) {
+    gbitmap_sequence_destroy(s_sequence);
+    s_sequence = NULL;
+  }
+  if(s_animation_bitmap) {
+    gbitmap_destroy(s_animation_bitmap);
+    s_animation_bitmap = NULL;
+  }
+
+  s_sequence = gbitmap_sequence_create_with_resource(RESOURCE_ID_ANIMATION_IMAGE);
+  s_animation_bitmap = gbitmap_create_blank(gbitmap_sequence_get_bitmap_size(s_sequence), GBitmapFormat8Bit);
+  app_timer_register(1, timer_handler, NULL);
+}
+
+
 
 // Time
 static void update_time() {
@@ -41,12 +77,13 @@ static void main_window_load(Window *window){
   s_animation_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ANIMATION_IMAGE);
   s_animation_layer = bitmap_layer_create(GRect(52, 15, 40, 80));
   bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
+  bitmap_layer_set_compositing_mode(s_animation_layer, GCompOpSet);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_animation_layer));
+  load_sequence();
 
   // Time
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_14));
   s_time_layer = text_layer_create(GRect(60, 113, bounds.size.w, 20));
-
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
   text_layer_set_font(s_time_layer, s_time_font);
@@ -58,6 +95,7 @@ static void main_window_unload(Window *window){
   text_layer_destroy(s_time_layer);
   fonts_unload_custom_font(s_time_font);
   gbitmap_destroy(s_background_bitmap);
+  bitmap_layer_destroy(s_animation_layer);
   bitmap_layer_destroy(s_background_layer);
 }
 
