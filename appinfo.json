@@ -1,0 +1,34 @@
+{
+  "uuid": "4767236d-47c0-479f-8efc-25dc82971c28",
+  "shortName": "undertale",
+  "longName": "undertale",
+  "companyName": "MakeAwesomeHappen",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt", "chalk"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": [
+      {
+        "type": "font",
+        "name": "DTM_MONO_14",
+        "file": "fonts/dtm_mono.ttf"
+      },
+      {
+        "type": "png",
+        "name": "BACKGROUND_IMAGE",
+        "file": "images/background.png"
+      },
+      {
+        "type": "raw",
+        "name": "ANIMATION_IMAGE",
+        "file": "images/animation.png"
+      }
+    ]
+  }
+}
