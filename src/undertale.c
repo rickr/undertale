@@ -1,5 +1,8 @@
 #include <pebble.h>
 
+// Number of times we animate per min
+const uint32_t ANIMATION_COUNT = 3;
+
 static Window *s_main_window;
 static TextLayer *s_time_layer;
 static GFont s_time_font;
@@ -11,6 +14,7 @@ static GBitmap *s_animation_bitmap;
 static BitmapLayer *s_animation_layer;
 static GBitmapSequence *s_sequence;
 
+static int s_battery_level;
 
 // Animation
 static void timer_handler(void *context) {
@@ -30,18 +34,19 @@ static void timer_handler(void *context) {
 }
 
 static void load_sequence() {
-  if(s_sequence) {
-    gbitmap_sequence_destroy(s_sequence);
-    s_sequence = NULL;
-  }
-  if(s_animation_bitmap) {
-    gbitmap_destroy(s_animation_bitmap);
-    s_animation_bitmap = NULL;
+  if(!s_sequence){
+    s_sequence = gbitmap_sequence_create_with_resource(RESOURCE_ID_ANIMATION_IMAGE);
   }
 
-  s_sequence = gbitmap_sequence_create_with_resource(RESOURCE_ID_ANIMATION_IMAGE);
-  s_animation_bitmap = gbitmap_create_blank(gbitmap_sequence_get_bitmap_size(s_sequence), GBitmapFormat8Bit);
+  if(!s_animation_bitmap){
+    s_animation_bitmap = gbitmap_create_blank(gbitmap_sequence_get_bitmap_size(s_sequence), GBitmapFormat8Bit);
+  }
+  gbitmap_sequence_set_play_count(s_sequence, ANIMATION_COUNT);
+
   app_timer_register(1, timer_handler, NULL);
+}
+
+static void run_animatiom(){
 }
 
 
@@ -54,6 +59,7 @@ static void update_time() {
   static char s_buffer[10];
   strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?  "%H:%M %p" : "%I:%M %p", tick_time);
 
+  load_sequence();
   text_layer_set_text(s_time_layer, s_buffer);
 }
 
@@ -79,7 +85,6 @@ static void main_window_load(Window *window){
   bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
   bitmap_layer_set_compositing_mode(s_animation_layer, GCompOpSet);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_animation_layer));
-  load_sequence();
 
   // Time
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_14));
