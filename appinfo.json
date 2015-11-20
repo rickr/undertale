@@ -20,6 +20,11 @@
         "file": "fonts/dtm_mono.ttf"
       },
       {
+        "type": "font",
+        "name": "DTM_MONO_8",
+        "file": "fonts/dtm_mono.ttf"
+      },
+      {
         "type": "png",
         "name": "BACKGROUND_IMAGE",
         "file": "images/background.png"

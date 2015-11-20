@@ -4,8 +4,10 @@
 const uint32_t ANIMATION_COUNT = 3;
 
 static Window *s_main_window;
-static TextLayer *s_time_layer;
 static GFont s_time_font;
+static GFont s_battery_font;
+
+static TextLayer *s_time_layer;
 
 static GBitmap *s_background_bitmap;
 static BitmapLayer *s_background_layer;
@@ -15,6 +17,7 @@ static BitmapLayer *s_animation_layer;
 static GBitmapSequence *s_sequence;
 
 static Layer *s_battery_layer;
+static TextLayer *s_battery_text_layer;
 static int s_battery_level;
 
 // Animation
@@ -67,6 +70,11 @@ static void battery_update_proc(Layer *layer, GContext *ctx) {
   // Draw the bar
   graphics_context_set_fill_color(ctx, GColorYellow);
   graphics_fill_rect(ctx, GRect(0, 0, width, bounds.size.h), 0, GCornerNone);
+
+  int battery_hp = s_battery_level / 5;
+  static char s_battery_buffer[32];
+  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "%d/20", battery_hp);
+  text_layer_set_text(s_battery_text_layer, s_battery_buffer);
 }
 
 
@@ -108,6 +116,15 @@ static void main_window_load(Window *window){
   // Battery
   s_battery_layer = layer_create(GRect(63, 146, 10, 5));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
+
+  s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_8));
+  s_battery_text_layer = text_layer_create(GRect(75, 143, bounds.size.w, 10));
+  text_layer_set_background_color(s_battery_text_layer, GColorClear);
+  text_layer_set_text_color(s_battery_text_layer, GColorWhite);
+  text_layer_set_font(s_battery_text_layer, s_battery_font);
+  text_layer_set_text_alignment(s_battery_text_layer, GTextAlignmentLeft);
+
+  layer_add_child(window_layer, text_layer_get_layer(s_battery_text_layer));
   layer_add_child(window_get_root_layer(window), s_battery_layer);
 
   // Time
