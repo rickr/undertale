@@ -46,10 +46,6 @@ static void load_sequence() {
   app_timer_register(1, timer_handler, NULL);
 }
 
-static void run_animatiom(){
-}
-
-
 
 // Time
 static void update_time() {
