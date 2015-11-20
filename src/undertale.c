@@ -61,7 +61,7 @@ static void battery_update_proc(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
 
   // Find the width of the bar
-  int width = (int)(float)(((float)s_battery_level / 100.0F) * 114.0F);
+  int width = (int)(float)(((float)s_battery_level / 100.0F) * 5.0F);
 
   // Draw the background
   graphics_context_set_fill_color(ctx, GColorRed);
