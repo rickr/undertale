@@ -14,6 +14,7 @@ static GBitmap *s_animation_bitmap;
 static BitmapLayer *s_animation_layer;
 static GBitmapSequence *s_sequence;
 
+static Layer *s_battery_layer;
 static int s_battery_level;
 
 // Animation
@@ -47,6 +48,28 @@ static void load_sequence() {
 }
 
 
+// Battery
+static void battery_callback(BatteryChargeState state){
+  s_battery_level = state.charge_percent;
+  layer_mark_dirty(s_battery_layer);
+}
+
+static void battery_update_proc(Layer *layer, GContext *ctx) {
+  GRect bounds = layer_get_bounds(layer);
+
+  // Find the width of the bar
+  int width = (int)(float)(((float)s_battery_level / 100.0F) * 114.0F);
+
+  // Draw the background
+  graphics_context_set_fill_color(ctx, GColorRed);
+  graphics_fill_rect(ctx, bounds, 0, GCornerNone);
+
+  // Draw the bar
+  graphics_context_set_fill_color(ctx, GColorYellow);
+  graphics_fill_rect(ctx, GRect(0, 0, width, bounds.size.h), 0, GCornerNone);
+}
+
+
 // Time
 static void update_time() {
   time_t temp = time(NULL);
@@ -55,12 +78,12 @@ static void update_time() {
   static char s_buffer[10];
   strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?  "%H:%M %p" : "%I:%M %p", tick_time);
 
-  load_sequence();
   text_layer_set_text(s_time_layer, s_buffer);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
+  load_sequence();
 }
 
 
@@ -81,6 +104,11 @@ static void main_window_load(Window *window){
   bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
   bitmap_layer_set_compositing_mode(s_animation_layer, GCompOpSet);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_animation_layer));
+
+  // Battery
+  s_battery_layer = layer_create(GRect(63, 146, 10, 5));
+  layer_set_update_proc(s_battery_layer, battery_update_proc);
+  layer_add_child(window_get_root_layer(window), s_battery_layer);
 
   // Time
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_14));
@@ -111,8 +139,13 @@ static void init(){
     .unload = main_window_unload
   });
 
+
+  battery_state_service_subscribe(battery_callback);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+
   window_stack_push(s_main_window, true);
+
+  battery_callback(battery_state_service_peek());
   update_time();
 }
 
