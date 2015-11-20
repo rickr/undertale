@@ -108,7 +108,7 @@ static void main_window_load(Window *window){
 
   // Animation
   s_animation_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ANIMATION_IMAGE);
-  s_animation_layer = bitmap_layer_create(GRect(52, 15, 40, 80));
+  s_animation_layer = bitmap_layer_create(GRect(47, 28, 50, 80));
   bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
   bitmap_layer_set_compositing_mode(s_animation_layer, GCompOpSet);
   layer_add_child(window_layer, bitmap_layer_get_layer(s_animation_layer));
