@@ -15,6 +15,12 @@
   "resources": {
     "media": [
       {
+        "type": "png",
+        "menuIcon": true,
+        "name": "ICON_IMAGE",
+        "file": "images/icon.png"
+      },
+      {
         "type": "font",
         "name": "DTM_MONO_14",
         "file": "fonts/dtm_mono.ttf"
@@ -28,12 +34,6 @@
         "type": "png",
         "name": "BACKGROUND_IMAGE",
         "file": "images/background.png"
-      },
-      {
-        "menuicon": true,
-        "type": "png",
-        "name": "ICON_IMAGE",
-        "file": "images/icon.png"
       },
       {
         "type": "raw",
