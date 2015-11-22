@@ -30,6 +30,12 @@
         "file": "images/background.png"
       },
       {
+        "menuicon": true,
+        "type": "png",
+        "name": "ICON_IMAGE",
+        "file": "images/icon.png"
+      },
+      {
         "type": "raw",
         "name": "ANIMATION_IMAGE",
         "file": "images/animation.png"
