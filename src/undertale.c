@@ -112,6 +112,12 @@ static void main_window_load(Window *window){
   Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
 
+  #ifdef PBL_SDK_3
+  uint32_t pebble_image = RESOURCE_ID_ANIMATION_IMAGE;
+  #else
+  uint32_t pebble_image = RESOURCE_ID_PEBBLE_IMAGE;
+  #endif
+
   // Background
   s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_BACKGROUND_IMAGE);
   s_background_layer = bitmap_layer_create(bounds);
@@ -119,17 +125,18 @@ static void main_window_load(Window *window){
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
 
   // Animation
-  s_animation_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ANIMATION_IMAGE);
+  s_animation_bitmap = gbitmap_create_with_resource(pebble_image);
   s_animation_layer = bitmap_layer_create(GRect(47, 28, 50, 80));
   bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
+  #ifdef PBL_SDK_3
   bitmap_layer_set_compositing_mode(s_animation_layer, GCompOpSet);
+  #endif
   layer_add_child(window_layer, bitmap_layer_get_layer(s_animation_layer));
 
   // Battery
   s_battery_layer = layer_create(GRect(63, 146, 10, 5));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
-  //s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_8));
   s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MARS_8));
   s_battery_text_layer = text_layer_create(GRect(75, 143, bounds.size.w, 10));
   text_layer_set_background_color(s_battery_text_layer, GColorClear);

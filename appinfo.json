@@ -36,6 +36,11 @@
         "file": "images/background.png"
       },
       {
+        "type": "png",
+        "name": "PEBBLE_IMAGE",
+        "file": "images/animation.png"
+      },
+      {
         "type": "raw",
         "name": "ANIMATION_IMAGE",
         "file": "images/animation.png"
