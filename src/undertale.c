@@ -117,7 +117,8 @@ static void main_window_load(Window *window){
   s_battery_layer = layer_create(GRect(63, 146, 10, 5));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
-  s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_8));
+  //s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_8));
+  s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MARS_8));
   s_battery_text_layer = text_layer_create(GRect(75, 143, bounds.size.w, 10));
   text_layer_set_background_color(s_battery_text_layer, GColorClear);
   text_layer_set_text_color(s_battery_text_layer, GColorWhite);

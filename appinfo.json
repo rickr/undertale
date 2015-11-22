@@ -25,6 +25,11 @@
         "file": "fonts/dtm_mono.ttf"
       },
       {
+        "type": "font",
+        "name": "MARS_8",
+        "file": "fonts/mars_needs_cunnilinugs.ttf"
+      },
+      {
         "type": "png",
         "name": "BACKGROUND_IMAGE",
         "file": "images/background.png"
