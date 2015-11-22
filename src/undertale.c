@@ -50,6 +50,10 @@ static void load_sequence() {
   app_timer_register(1, timer_handler, NULL);
 }
 
+static void tap_handler(AccelAxisType axis, int32_t direction) {
+  if(direction){ load_sequence(); }
+}
+
 
 // Battery
 static void battery_callback(BatteryChargeState state){
@@ -61,7 +65,7 @@ static void battery_update_proc(Layer *layer, GContext *ctx) {
   GRect bounds = layer_get_bounds(layer);
 
   // Find the width of the bar
-  int width = (int)(float)(((float)s_battery_level / 100.0F) * 5.0F);
+  int width = (int)(float)(((float)s_battery_level / 100.0F) * 10.0F);
 
   // Draw the background
   graphics_context_set_fill_color(ctx, GColorRed);
@@ -73,7 +77,7 @@ static void battery_update_proc(Layer *layer, GContext *ctx) {
 
   int battery_hp = s_battery_level / 5;
   static char s_battery_buffer[32];
-  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "%d/20", battery_hp);
+  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "%02d/20", battery_hp);
   text_layer_set_text(s_battery_text_layer, s_battery_buffer);
 }
 
@@ -117,7 +121,8 @@ static void main_window_load(Window *window){
   s_battery_layer = layer_create(GRect(63, 146, 10, 5));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
-  s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_8));
+  //s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_8));
+  s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MARS_8));
   s_battery_text_layer = text_layer_create(GRect(75, 143, bounds.size.w, 10));
   text_layer_set_background_color(s_battery_text_layer, GColorClear);
   text_layer_set_text_color(s_battery_text_layer, GColorWhite);
@@ -157,6 +162,7 @@ static void init(){
   });
 
 
+  accel_tap_service_subscribe(tap_handler);
   battery_state_service_subscribe(battery_callback);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 
@@ -167,6 +173,9 @@ static void init(){
 }
 
 static void deinit(){
+  tick_timer_service_unsubscribe();
+  battery_state_service_unsubscribe();
+  accel_tap_service_unsubscribe();
   window_destroy(s_main_window);
 }
 
