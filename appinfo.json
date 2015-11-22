@@ -3,7 +3,7 @@
   "shortName": "undertale",
   "longName": "undertale",
   "companyName": "RickR",
-  "versionLabel": "1.1",
+  "versionLabel": "1.1.1",
   "sdkVersion": "3",
   "targetPlatforms": ["basalt"],
   "watchapp": {
