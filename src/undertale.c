@@ -14,13 +14,16 @@ static BitmapLayer *s_background_layer;
 
 static GBitmap *s_animation_bitmap;
 static BitmapLayer *s_animation_layer;
+#ifdef PBL_SDK_3
 static GBitmapSequence *s_sequence;
+#endif
 
 static Layer *s_battery_layer;
 static TextLayer *s_battery_text_layer;
 static int s_battery_level;
 
 // Animation
+#ifdef PBL_SDK_3
 static void timer_handler(void *context) {
   uint32_t next_delay;
 
@@ -49,9 +52,12 @@ static void load_sequence() {
 
   app_timer_register(1, timer_handler, NULL);
 }
+#endif
 
 static void tap_handler(AccelAxisType axis, int32_t direction) {
+  #ifdef PBL_SDK_3
   if(direction){ load_sequence(); }
+  #endif
 }
 
 
@@ -68,11 +74,11 @@ static void battery_update_proc(Layer *layer, GContext *ctx) {
   int width = (int)(float)(((float)s_battery_level / 100.0F) * 10.0F);
 
   // Draw the background
-  graphics_context_set_fill_color(ctx, GColorRed);
+  graphics_context_set_fill_color(ctx, COLOR_FALLBACK(GColorRed, GColorBlack));
   graphics_fill_rect(ctx, bounds, 0, GCornerNone);
 
   // Draw the bar
-  graphics_context_set_fill_color(ctx, GColorYellow);
+  graphics_context_set_fill_color(ctx, COLOR_FALLBACK(GColorYellow, GColorWhite));
   graphics_fill_rect(ctx, GRect(0, 0, width, bounds.size.h), 0, GCornerNone);
 
   int battery_hp = s_battery_level / 5;
@@ -95,7 +101,9 @@ static void update_time() {
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
+  #ifdef PBL_SDK_3
   load_sequence();
+  #endif
 }
 
 
