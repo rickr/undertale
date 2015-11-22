@@ -73,7 +73,7 @@ static void battery_update_proc(Layer *layer, GContext *ctx) {
 
   int battery_hp = s_battery_level / 5;
   static char s_battery_buffer[32];
-  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "%d/20", battery_hp);
+  snprintf(s_battery_buffer, sizeof(s_battery_buffer), "%02d/20", battery_hp);
   text_layer_set_text(s_battery_text_layer, s_battery_buffer);
 }
 
