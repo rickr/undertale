@@ -50,6 +50,10 @@ static void load_sequence() {
   app_timer_register(1, timer_handler, NULL);
 }
 
+static void tap_handler(AccelAxisType axis, int32_t direction) {
+  if(direction){ load_sequence(); }
+}
+
 
 // Battery
 static void battery_callback(BatteryChargeState state){
@@ -158,6 +162,7 @@ static void init(){
   });
 
 
+  accel_tap_service_subscribe(tap_handler);
   battery_state_service_subscribe(battery_callback);
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 
@@ -168,6 +173,9 @@ static void init(){
 }
 
 static void deinit(){
+  tick_timer_service_unsubscribe();
+  battery_state_service_unsubscribe();
+  accel_tap_service_unsubscribe();
   window_destroy(s_main_window);
 }
 
