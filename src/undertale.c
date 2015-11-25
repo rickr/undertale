@@ -148,8 +148,14 @@ static void main_window_load(Window *window){
   layer_add_child(window_get_root_layer(window), s_battery_layer);
 
   // Time
+  #if defined(PBL_RECT)
+  GRect time_layer_pos =  GRect(60, 113, bounds.size.w, 20);
+  #elif defined(PBL_ROUND)
+  GRect time_layer_pos =  GRect(78, 107, bounds.size.w, 20);
+  #endif
+
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_DTM_MONO_14));
-  s_time_layer = text_layer_create(GRect(60, 113, bounds.size.w, 20));
+  s_time_layer = text_layer_create(time_layer_pos);
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
   text_layer_set_font(s_time_layer, s_time_font);
