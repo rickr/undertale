@@ -125,8 +125,13 @@ static void main_window_load(Window *window){
   layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
 
   // Animation
+  #if defined(PBL_RECT)
+  GRect animation_layer_pos =  GRect(47, 28, 50, 80);
+  #elif defined(PBL_ROUND)
+  GRect animation_layer_pos =  GRect(65, 22, 50, 80);
+  #endif
   s_animation_bitmap = gbitmap_create_with_resource(pebble_image);
-  s_animation_layer = bitmap_layer_create(GRect(47, 28, 50, 80));
+  s_animation_layer = bitmap_layer_create(animation_layer_pos);
   bitmap_layer_set_bitmap(s_animation_layer, s_animation_bitmap);
   #ifdef PBL_SDK_3
   bitmap_layer_set_compositing_mode(s_animation_layer, GCompOpSet);
