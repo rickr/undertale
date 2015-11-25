@@ -134,11 +134,21 @@ static void main_window_load(Window *window){
   layer_add_child(window_layer, bitmap_layer_get_layer(s_animation_layer));
 
   // Battery
-  s_battery_layer = layer_create(GRect(63, 146, 10, 5));
+  #if defined(PBL_RECT)
+  GRect battery_layer_pos =  GRect(63, 146, 10, 5);
+  #elif defined(PBL_ROUND)
+  GRect battery_layer_pos =  GRect(90, 140, 10, 5);
+  #endif
+  s_battery_layer = layer_create(battery_layer_pos);
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
+  #if defined(PBL_RECT)
+  GRect battery_text_layer_pos =  GRect(75, 143, bounds.size.w, 10);
+  #elif defined(PBL_ROUND)
+  GRect battery_text_layer_pos =  GRect(103, 137, bounds.size.w, 10);
+  #endif
   s_battery_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_MARS_8));
-  s_battery_text_layer = text_layer_create(GRect(75, 143, bounds.size.w, 10));
+  s_battery_text_layer = text_layer_create(battery_text_layer_pos);
   text_layer_set_background_color(s_battery_text_layer, GColorClear);
   text_layer_set_text_color(s_battery_text_layer, GColorWhite);
   text_layer_set_font(s_battery_text_layer, s_battery_font);
