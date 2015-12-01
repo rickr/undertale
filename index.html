@@ -11,7 +11,7 @@
       <div class="item-container-content">
         <label class="item">
           Animation Frequency
-          <select name="animation_freq" dir='rtl' class="item-select">
+          <select id="animation_freq" name="animation_freq" dir='rtl' class="item-select">
             <option class="item-select-option" value='0'>Always on</option>
             <option class="item-select-option" value='1' selected>Every min</option>
             <option class="item-select-option" value='2'>Every Hour</option>
@@ -28,9 +28,12 @@
   </div>
   <script src='dist/js/slate.min.js'></script>
   <script type='text/javascript'>
+    // Default values
     var config = {
       "animation_freq": "1"
     };
+
+    config["animation_freq"] = $('#animation_freq')[0].value();
 
     function getQueryParam(variable, defaultValue) {
       var query = location.search.substring(1);
